@@ -35,4 +35,28 @@
   to {
     transform: rotate(360deg);
   }
+  
+}
+body.dark-mode {
+  background: #181818;
+  color: #f1f1f1;
+}
+
+body.dark-mode input,
+body.dark-mode button,
+body.dark-mode textarea {
+  background: #222;
+  color: #f1f1f1;
+  border: 1px solid #444;
+}
+
+body.dark-mode .main-container,
+body.dark-mode .todo-container {
+  background: #232323 !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4) !important;
+}
+
+body.dark-mode nav {
+  background: #222 !important;
+  color: #fff !important;
 }

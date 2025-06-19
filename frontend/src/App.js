@@ -12,6 +12,11 @@ import SignUp from "./pages/Signup";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    document.body.className = darkMode ? "dark-mode" : "";
+  }, [darkMode]);
 
   useEffect(() => {
     setIsLoggedIn(!!localStorage.getItem("token"));
@@ -29,6 +34,22 @@ function App() {
   return (
     <Router>
       {isLoggedIn && <NavBar onLogout={handleLogout} />}
+      <div style={{ textAlign: "right", maxWidth: 400, margin: "0 auto" }}>
+        <button
+          onClick={() => setDarkMode((d) => !d)}
+          style={{
+            margin: 8,
+            padding: "4px 12px",
+            borderRadius: 6,
+            border: "1px solid #444",
+            background: darkMode ? "#222" : "#eee",
+            color: darkMode ? "#fff" : "#222",
+            cursor: "pointer",
+          }}
+        >
+          {darkMode ? "Light Mode" : "Dark Mode"}
+        </button>
+      </div>
       <Routes>
         <Route
           path="/"
