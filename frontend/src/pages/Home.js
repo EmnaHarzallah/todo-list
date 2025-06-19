@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getTodos, createTodo, updateTodo, deleteTodo } from "../api";
 import ToDoItem from "../components/ToDoItem";
+import axios from "axios";
 
 const Home = () => {
   const [todos, setTodos] = useState([]);
@@ -11,26 +12,69 @@ const Home = () => {
   }, []);
 
   const fetchTodos = async () => {
-    const res = await getTodos();
-    setTodos(res.data);
+    try {
+      const res = await axios.get("http://localhost:5000/api/todos", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setTodos(res.data);
+    } catch (err) {
+      // Handle error (e.g., redirect to login if 401)
+      console.error(err);
+    }
   };
 
   const handleAdd = async () => {
-    if (!title.trim()) return;
-    await createTodo({ title: title.trim() });
-    setTitle("");
-    fetchTodos();
+    if (!title.trim()) return; // Prevent empty todos
+    try {
+      await axios.post(
+        "http://localhost:5000/api/todos",
+        { title },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setTitle(""); // Clear input
+      fetchTodos(); // Refresh the list
+    } catch (err) {
+      console.error(err);
+      // Optionally show an error message to the user
+    }
   };
 
   const handleEdit = async (id, newTitle) => {
-    if (!newTitle.trim()) return;
-    await updateTodo(id, { title: newTitle.trim() });
-    fetchTodos();
+    try {
+      await axios.put(
+        `http://localhost:5000/api/todos/${id}`,
+        { title: newTitle },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      fetchTodos(); // Refresh the list after editing
+    } catch (err) {
+      console.error(err);
+      // Optionally show an error message or redirect to login
+    }
   };
 
   const handleDelete = async (id) => {
-    await deleteTodo(id);
-    fetchTodos();
+    try {
+      await axios.delete(`http://localhost:5000/api/todos/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      fetchTodos(); // Refresh the list after deletion
+    } catch (err) {
+      console.error(err);
+      // Optionally show an error message or redirect to login
+    }
   };
 
   return (
